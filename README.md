@@ -1,4 +1,4 @@
-The codes provided in this directory are related to last experiment of the manuscript entitled 
+The codes provided in this directory are related to the last experiment in the manuscript entitled 
 
 "DL-Reg: A Deep Learning Regularization Technique using Linear Regression". However, these codes contain the main parts
 
