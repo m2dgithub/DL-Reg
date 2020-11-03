@@ -53,7 +53,7 @@ trainset = torchvision.datasets.MNIST(root='./data', train=True, download=True, 
 #)
 
 set_seed(42)
-trainloader = torch.utils.data.DataLoader(trainset, batch_size=2000, shuffle=True, num_workers=0, worker_init_fn=np.random.seed(42))
+trainloader = torch.utils.data.DataLoader(trainset, batch_size=256, shuffle=True, num_workers=0, worker_init_fn=np.random.seed(42))
 
 
 #testset = torchvision.datasets.CIFAR10(root='./data', train=False, download=True, transform=transform_test)
@@ -105,8 +105,15 @@ def train(epoch):
         optimizer.zero_grad()
         outputs = net(inputs)
         inputs = torch.flatten(inputs, start_dim=1).float()
-        Z = torch.inverse(torch.transpose(inputs, 0, 1) @ inputs + torch.eye(784).to(device)) @ torch.transpose(inputs, 0,
-                                                                                                            1) @ outputs
+        #Z = torch.inverse(torch.transpose(inputs, 0, 1) @ inputs + torch.eye(784).to(device)) @ torch.transpose(inputs, 0,
+                                                                                                            #1) @ outputs
+        #Z = torch.transpose(inputs, 0, 1) @ torch.inverse(inputs @ torch.transpose(inputs, 0, 1)) @ outputs
+        if list(inputs.size())[0] >= list(inputs.size())[1]:
+            Z = torch.inverse(torch.transpose(inputs, 0, 1) @ inputs + torch.eye(list(inputs.size())[1]).to(device)) @ torch.transpose(inputs, 0,
+                                                                                                                1) @ outputs
+        else:
+            Z = torch.transpose(inputs, 0, 1) @ torch.inverse(inputs @ torch.transpose(inputs, 0, 1)) @ outputs
+ 
         estim = inputs @ Z
         reg_error = MSE_criterion(estim, outputs) 
         loss = criterion(outputs, targets).float().add(gamma_factor*reg_error)
@@ -158,9 +165,9 @@ for epoch in range(start_epoch, start_epoch+1250):
 
     print('TrainAcc: '+str(trainAcc)+'    TrainLoss: '+str(trainLoss))
     testAcc = test(epoch)
-    file1 = open("proposed_MNIST_TrainAcc.txt", "a")
-    file2 = open("proposed_MNIST_TrainLoss.txt", "a")
-    file3 = open("proposed_MNIST_TestAcc.txt", "a")
+    file1 = open("wo_eye_proposed_MNIST_TrainAcc.txt", "a")
+    file2 = open("wo_eye_proposed_MNIST_TrainLoss.txt", "a")
+    file3 = open("wo_eye_proposed_MNIST_TestAcc.txt", "a")
     file1.write(str(trainAcc)+'\n')
     file2.write(str(trainLoss) + '\n')
     file3.write(str(testAcc)+ '\n')

@@ -52,7 +52,7 @@ trainset = torchvision.datasets.MNIST(root='./data', train=True, download=True, 
 #)
 
 set_seed(42)
-trainloader = torch.utils.data.DataLoader(trainset, batch_size=2000, shuffle=True, num_workers=0, worker_init_fn=np.random.seed(42))
+trainloader = torch.utils.data.DataLoader(trainset, batch_size=256, shuffle=True, num_workers=0, worker_init_fn=np.random.seed(42))
 
 
 #testset = torchvision.datasets.CIFAR10(root='./data', train=False, download=True, transform=transform_test)
@@ -100,11 +100,11 @@ def train(epoch):
         inputs, targets = inputs.to(device), targets.to(device)
         optimizer.zero_grad()
         outputs = net(inputs)
-        inputs = torch.flatten(inputs, start_dim=1).float()
-        Z = torch.inverse(torch.transpose(inputs, 0, 1) @ inputs + torch.eye(784).to(device)) @ torch.transpose(inputs, 0,
-                                                                                                            1) @ outputs
-        estim = inputs @ Z
-        reg_error = MSE_criterion(estim, outputs)
+        #inputs = torch.flatten(inputs, start_dim=1).float()
+        #Z = torch.inverse(torch.transpose(inputs, 0, 1) @ inputs + torch.eye(784).to(device)) @ torch.transpose(inputs, 0,
+                                                                                                           # 1) @ outputs
+        #estim = inputs @ Z
+        #reg_error = MSE_criterion(estim, outputs)
         loss = criterion(outputs, targets).float()
         loss.backward()
         optimizer.step()
