@@ -8,5 +8,6 @@ of the propoed method, and researchers/developers can simply find the core imple
 To run each code, just simply run its file using: python filename.python
 
 -MNIST_DL_Reg.py applyies DL-Reg as the regularizer over MNIST
+
 -MNIST_WD.py applyies Weight_Decay as the regularizer over MNIST
 
