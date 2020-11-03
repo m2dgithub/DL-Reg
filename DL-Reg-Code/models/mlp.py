@@ -16,7 +16,7 @@ class _MLP(nn.Module):
         self.linear_3 = nn.Linear(1024, 2048)
         self.linear_4 = nn.Linear(2048, num_classes)
         self.drop_layer = nn.Dropout(p=0.5)
-        self.drop_input_layer = nn.Dropout(p=0.8)
+        self.drop_input_layer = nn.Dropout(p=0.2)
 
     def forward(self, x):
         out = self.linear_1(x.view(x.size()[0], -1))
